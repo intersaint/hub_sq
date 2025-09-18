@@ -36,7 +36,8 @@ export async function POST(request: Request) {
     }
 
     // Step 2: Update the quests table to set the proof_url
-    const { data, error: questUpdateError } = await (supabaseAdmin as any)
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const { error: questUpdateError } = await (supabaseAdmin as any)
       .from('quests')
       .update({ proof_url: proofUrl })
       .eq('id', questId);
@@ -48,10 +49,10 @@ export async function POST(request: Request) {
 
     return NextResponse.json({ success: true });
 
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error('Error in approve-and-set-proof:', error);
     return NextResponse.json(
-      { error: error.message || 'An unexpected error occurred.' },
+      { error: error instanceof Error ? error.message : 'An unexpected error occurred.' },
       { status: 500 }
     );
   }

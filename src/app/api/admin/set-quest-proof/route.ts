@@ -1,7 +1,5 @@
-import { NextRequest, NextResponse } from 'next/server';
-import { createClient } from '@supabase/supabase-js';
+import { NextResponse } from 'next/server';
 import { supabaseAdmin, isAdminAvailable } from '@/lib/supabase';
-import { Database } from '@/types/database';
 
 export async function POST(request: Request) {
   if (!isAdminAvailable()) {
@@ -20,7 +18,7 @@ export async function POST(request: Request) {
 
   try {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const { data, error } = await (supabaseAdmin as any)
+    const { error } = await (supabaseAdmin as any)
       .from('quests')
       .update({ proof_url: proofUrl })
       .eq('id', questId);
