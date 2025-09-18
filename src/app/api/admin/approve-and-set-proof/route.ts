@@ -19,8 +19,9 @@ export async function POST(request: Request) {
       );
     }
 
-    // Step 1: Update the quest_proofs table to set the status to 'approved'
-    const { error: proofUpdateError } = await supabaseAdmin
+    // Step 1: Update the quest_proofs table to approve the proof
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const { error: proofUpdateError } = await (supabaseAdmin as any)
       .from('quest_proofs')
       .update({
         status: 'approved',
@@ -35,7 +36,7 @@ export async function POST(request: Request) {
     }
 
     // Step 2: Update the quests table to set the proof_url
-    const { error: questUpdateError } = await supabaseAdmin
+    const { data, error: questUpdateError } = await (supabaseAdmin as any)
       .from('quests')
       .update({ proof_url: proofUrl })
       .eq('id', questId);

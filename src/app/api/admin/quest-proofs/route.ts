@@ -55,24 +55,47 @@ export async function GET() {
 
     // Then get quest details for each proof
     const enrichedProofs = await Promise.all(
-      (questProofs || []).map(async (proof: any) => {
-        const { data: questData, error: questError } = await supabaseAdmin
+      (questProofs || []).map(async (proof: {
+        id: string;
+        quest_id: string;
+        submitter_id: string;
+        status: string;
+        created_at: string;
+        proof_url?: string;
+        payout_amount?: number | null;
+        payout_currency?: string | null;
+        payout_tx_hash?: string | null;
+        [key: string]: unknown;
+      }) => {
+        const { data: questData } = await supabaseAdmin
           .from('quests')
-          .select(`
-            title, 
-            description,
-            streamers!inner(twitch_username)
-          `)
+          .select('title, streamer_id')
           .eq('id', proof.quest_id)
-          .single();
+          .single<{
+            title: string;
+            streamer_id: string;
+          }>();
 
-        if (questError) {
-          console.warn(`Failed to fetch quest ${proof.quest_id}:`, questError);
+        let streamerName: string | null = null;
+        if (questData && questData.streamer_id) {
+          const { data: streamerData } = await supabaseAdmin
+            .from('streamers')
+            .select('twitch_username')
+            .eq('id', questData.streamer_id)
+            .single<{
+              twitch_username: string;
+            }>();
+          if (streamerData) {
+            streamerName = streamerData.twitch_username;
+          }
         }
 
         return {
           ...proof,
-          quest: questData || null
+          quest: {
+            title: questData?.title,
+            streamer: streamerName
+          }
         };
       })
     );
@@ -103,14 +126,15 @@ export async function PATCH(request: Request) {
 
     const { id, status, payout_amount, payout_currency } = await request.json();
 
-    const { data, error } = await supabaseAdmin
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const { data, error } = await (supabaseAdmin as any)
       .from('quest_proofs')
       .update({
         status,
         payout_amount,
         payout_currency,
         updated_at: new Date().toISOString()
-      } as any)
+      })
       .eq('id', id)
       .select()
       .single();

@@ -83,13 +83,13 @@ export async function GET() {
     const questProofs = questProofsResult.data || [];
     const questStats = {
       total: questProofs.length,
-      pending: questProofs.filter((q: any) => q.status === 'pending').length,
-      approved: questProofs.filter((q: any) => q.status === 'approved').length,
-      rejected: questProofs.filter((q: any) => q.status === 'rejected').length,
+      pending: questProofs.filter((q: { status: string }) => q.status === 'pending').length,
+      approved: questProofs.filter((q: { status: string }) => q.status === 'approved').length,
+      rejected: questProofs.filter((q: { status: string }) => q.status === 'rejected').length,
       totalPayout: questProofs.length > 0 
         ? questProofs
-            .filter((q: any) => q.status === 'approved')
-            .reduce((sum: number, q: any) => sum + (Number(q.payout_amount) || 0), 0)
+            .filter((q: { status: string }) => q.status === 'approved')
+            .reduce((sum: number, q: { payout_amount?: number | null }) => sum + (Number(q.payout_amount) || 0), 0)
         : 0
     };
 
@@ -97,16 +97,28 @@ export async function GET() {
     const challengeSubmissions = challengeSubmissionsResult.data || [];
     const challengeStats = {
       total: challengeSubmissions.length,
-      pending: challengeSubmissions.filter((c: any) => c.status === 'pending').length,
-      approved: challengeSubmissions.filter((c: any) => c.status === 'approved').length,
-      rejected: challengeSubmissions.filter((c: any) => c.status === 'rejected').length
+      pending: challengeSubmissions.filter((c: { status: string }) => c.status === 'pending').length,
+      approved: challengeSubmissions.filter((c: { status: string }) => c.status === 'approved').length,
+      rejected: challengeSubmissions.filter((c: { status: string }) => c.status === 'rejected').length
     };
 
     // Process recent activity - enrich with quest details
     console.log('Quest proofs data structure:', JSON.stringify(recentActivityResult.data?.[0], null, 2));
     
     const recentActivity = await Promise.all(
-      (recentActivityResult.data || []).map(async (item: any) => {
+      (recentActivityResult.data || []).map(async (item: {
+        id: string;
+        quest_id: string;
+        submitter_id: string;
+        wallet_address?: string;
+        user_wallet?: string;
+        status: string;
+        created_at: string;
+        proof_url?: string;
+        payout_amount?: number | null;
+        payout_currency?: string | null;
+        payout_tx_hash?: string | null;
+      }) => {
         // Fetch quest details for each proof
         const { data: questData, error: questError } = await supabaseAdmin
           .from('quests')
@@ -119,7 +131,7 @@ export async function GET() {
 
         let streamerName: string | null = null;
         if (questData && questData.streamer_id) {
-          const { data: streamerData, error: streamerError } = await supabaseAdmin
+          const { data: streamerData } = await supabaseAdmin
             .from('streamers')
             .select('twitch_username')
             .eq('id', questData.streamer_id)

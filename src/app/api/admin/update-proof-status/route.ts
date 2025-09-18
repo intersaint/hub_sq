@@ -19,7 +19,8 @@ export async function POST(request: Request) {
       );
     }
 
-    const { data, error } = await supabaseAdmin
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const { data, error } = await (supabaseAdmin as any)
       .from('quest_proofs')
       .update({
         status,

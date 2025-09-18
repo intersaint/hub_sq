@@ -1,4 +1,5 @@
-import { NextResponse } from 'next/server';
+import { NextRequest, NextResponse } from 'next/server';
+import { createClient } from '@supabase/supabase-js';
 import { supabaseAdmin, isAdminAvailable } from '@/lib/supabase';
 import { Database } from '@/types/database';
 
@@ -18,7 +19,8 @@ export async function POST(request: Request) {
   }
 
   try {
-    const { error } = await supabaseAdmin
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const { data, error } = await (supabaseAdmin as any)
       .from('quests')
       .update({ proof_url: proofUrl })
       .eq('id', questId);

@@ -2,8 +2,7 @@
 
 import { usePrivy } from '@privy-io/react-auth';
 import { ReactNode } from 'react';
-import { Shield, LogIn, Loader2, AlertTriangle } from 'lucide-react';
-import { useAdminAuth } from '@/hooks/useAdminAuth';
+import { Shield, LogIn, Loader2 } from 'lucide-react';
 
 const ALLOWED_ADMIN_IDS = [
   'did:privy:cmfmv71p900e4le0brzlpo7xu',

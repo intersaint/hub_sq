@@ -4,11 +4,11 @@ import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { 
   LayoutDashboard, 
-  FileText, 
-  Trophy, 
-  Users, 
-  Settings,
-  Menu,
+  Users,
+  Shield, 
+  Settings, 
+  LogOut, 
+  Menu, 
   X
 } from 'lucide-react';
 

@@ -30,7 +30,7 @@ export async function POST(request: NextRequest) {
 
     // Update the quest proof with payout details
     // Using type assertion to bypass strict TypeScript checking for dynamic updates
-    const updatePayload: any = {};
+    const updatePayload: Record<string, string | number | null> = {};
     
     if (payoutAmount !== undefined) {
       updatePayload.payout_amount = payoutAmount ? parseFloat(payoutAmount) : null;
@@ -43,6 +43,7 @@ export async function POST(request: NextRequest) {
     }
     updatePayload.updated_at = new Date().toISOString();
 
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const { data, error } = await (supabaseAdmin as any)
       .from('quest_proofs')
       .update(updatePayload)

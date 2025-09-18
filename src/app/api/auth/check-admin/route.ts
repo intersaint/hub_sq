@@ -1,7 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 
-const PRIVY_APP_ID = 'cmc71t0f000hml20m5223w04l';
-const PRIVY_APP_SECRET = process.env.PRIVY_APP_SECRET;
+const PRIVY_APP_ID = process.env.NEXT_PUBLIC_PRIVY_APP_ID;
 
 // Store allowed admin user IDs securely on the server
 const ALLOWED_ADMIN_IDS = [
@@ -21,12 +20,17 @@ export async function POST(request: NextRequest) {
     console.log('Verifying token with Privy API...');
 
     // Verify the token with Privy API
+    const headers: Record<string, string> = {
+      'Authorization': `Bearer ${accessToken}`,
+    };
+    
+    if (PRIVY_APP_ID) {
+      headers['privy-app-id'] = PRIVY_APP_ID;
+    }
+
     const response = await fetch('https://auth.privy.io/api/v1/users/me', {
       method: 'GET',
-      headers: {
-        'Authorization': `Bearer ${accessToken}`,
-        'privy-app-id': PRIVY_APP_ID,
-      },
+      headers,
     });
 
     if (!response.ok) {

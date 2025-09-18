@@ -1,7 +1,7 @@
 'use client';
 
 import { usePrivy } from '@privy-io/react-auth';
-import { ReactNode, useEffect } from 'react';
+import { ReactNode } from 'react';
 import { Shield, LogIn, Loader2 } from 'lucide-react';
 
 interface AuthGuardProps {

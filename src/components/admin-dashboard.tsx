@@ -1,16 +1,10 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
-import { formatCurrency } from '@/lib/utils';
-import { supabaseAdmin, isAdminAvailable, isDemoMode } from '@/lib/supabase';
 import { 
   FileText, 
   Trophy, 
   DollarSign, 
-  Users, 
   Clock, 
   CheckCircle,
   XCircle,
@@ -147,7 +141,7 @@ export default function AdminDashboard() {
     }
   };
 
-  const initializePayoutData = (activity: any) => {
+  const initializePayoutData = (activity: DashboardStats['recentActivity'][0]) => {
     if (!payoutData[activity.id]) {
       setPayoutData(prev => ({
         ...prev,
@@ -393,11 +387,14 @@ export default function AdminDashboard() {
                         Your browser does not support the video tag.
                       </video>
                     ) : isImageUrl(activity.proof_url) ? (
-                      <img 
-                        src={activity.proof_url} 
-                        alt="Quest proof" 
-                        className="w-full max-h-80 object-contain rounded-lg bg-slate-900 border border-slate-700" 
-                      />
+                      <>
+                        {/* eslint-disable-next-line @next/next/no-img-element */}
+                        <img 
+                          src={activity.proof_url} 
+                          alt="Quest proof" 
+                          className="w-full max-h-80 object-contain rounded-lg bg-slate-900 border border-slate-700" 
+                        />
+                      </>
                     ) : (
                       <a 
                         href={activity.proof_url} 
