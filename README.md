@@ -1,36 +1,109 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Quest & Challenge Admin Hub
+
+A Next.js admin interface for managing quest proof submissions and challenge submissions. This application provides moderators with tools to review, approve, reject, and manage payouts for user-submitted content.
+
+## Features
+
+- **Dashboard**: Overview of all quest proofs and challenge submissions with statistics
+- **Quest Proof Review**: Review and manage quest proof submissions with voting system
+- **Challenge Submission Review**: Manage challenge submissions with winner selection
+- **Payout Management**: Process payments for approved submissions
+- **Real-time Updates**: Live updates of submission statuses and statistics
+
+## Tech Stack
+
+- **Next.js 15** - React framework with App Router
+- **TypeScript** - Type safety and better developer experience
+- **Tailwind CSS** - Utility-first CSS framework
+- **Supabase** - Database and real-time subscriptions
+- **Lucide React** - Beautiful icons
+- **Date-fns** - Date manipulation utilities
+
+## Database Schema
+
+The application works with the following main tables:
+- `quest_proofs` - User-submitted quest proofs
+- `challenge_submissions` - Challenge submissions
+- `quests` - Quest definitions
+- `challenges` - Challenge definitions
+- `profiles` - User profiles
 
 ## Getting Started
 
-First, run the development server:
-
+1. **Clone and install dependencies**:
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+npm install --legacy-peer-deps
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+2. **Set up environment variables**:
+Copy `env.example` to `.env.local` and fill in your Supabase credentials:
+```bash
+cp env.example .env.local
+```
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+3. **Configure your environment**:
+```env
+NEXT_PUBLIC_SUPABASE_URL=your_supabase_project_url
+NEXT_PUBLIC_SUPABASE_ANON_KEY=your_supabase_anon_key
+SUPABASE_SERVICE_ROLE_KEY=your_supabase_service_role_key
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+4. **Run the development server**:
+```bash
+npm run dev
+```
 
-## Learn More
+5. **Open the application**:
+Navigate to [http://localhost:3000](http://localhost:3000) to access the admin interface.
 
-To learn more about Next.js, take a look at the following resources:
+## Admin Interface
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+### Dashboard
+- View statistics for quest proofs and challenge submissions
+- Monitor pending, approved, and rejected submissions
+- Track total payouts processed
+- See recent activity across all submissions
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+### Quest Proof Review
+- Review user-submitted quest proofs
+- View proof URLs (Twitch clips, YouTube videos, etc.)
+- See community voting (upvotes/downvotes)
+- Approve or reject submissions
+- Process payouts to user wallets
 
-## Deploy on Vercel
+### Challenge Submission Review
+- Manage challenge submissions
+- Review submission requirements and deadlines
+- Select winners for challenges
+- Process challenge payouts
+- View submission categories (gaming, endurance, charity, etc.)
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## Key Components
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+- `AdminLayout` - Main navigation and layout wrapper
+- `AdminDashboard` - Statistics and overview dashboard
+- `QuestProofReview` - Quest proof management interface
+- `ChallengeSubmissionReview` - Challenge submission management
+- Database types and utilities in `/src/types/` and `/src/lib/`
+
+## Development
+
+The application uses TypeScript for type safety. Key types are defined in:
+- `/src/types/database.ts` - Database schema types
+- Component prop types are defined inline
+
+## Deployment
+
+This Next.js application can be deployed to:
+- Vercel (recommended)
+- Netlify
+- Any Node.js hosting platform
+
+Make sure to set up your environment variables in your deployment platform.
+
+## Security Notes
+
+- The application uses Supabase Row Level Security (RLS)
+- Admin operations require service role key
+- All database operations are server-side for security
+- User authentication should be implemented for production use
