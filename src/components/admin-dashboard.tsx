@@ -397,33 +397,37 @@ export default function AdminDashboard() {
                   </div>
                 )}
 
-                {activity.status === 'pending' && (
+                {(activity.status === 'pending' || (activity.status === 'approved' && activity.type === 'quest_proof' && activity.proof_url && activity.quest_id)) && (
                   <div className="flex flex-wrap items-center gap-2 pt-3 border-t border-slate-700">
-                    <button
-                      onClick={() => updateProofStatus(activity.id, 'approved')}
-                      disabled={updating[activity.id]}
-                      className="inline-flex items-center gap-2 px-3 py-1.5 bg-green-600 hover:bg-green-700 disabled:opacity-50 text-white text-sm font-medium rounded-lg transition-colors"
-                    >
-                      {updating[activity.id] ? (
-                        <div className="animate-spin rounded-full h-4 w-4 border-2 border-white/20 border-t-white"></div>
-                      ) : (
-                        <CheckCircle className="h-4 w-4" />
-                      )}
-                      Approve
-                    </button>
-                    <button
-                      onClick={() => updateProofStatus(activity.id, 'rejected')}
-                      disabled={updating[activity.id]}
-                      className="inline-flex items-center gap-2 px-3 py-1.5 bg-red-600 hover:bg-red-700 disabled:opacity-50 text-white text-sm font-medium rounded-lg transition-colors"
-                    >
-                      {updating[activity.id] ? (
-                        <div className="animate-spin rounded-full h-4 w-4 border-2 border-white/20 border-t-white"></div>
-                      ) : (
-                        <XCircle className="h-4 w-4" />
-                      )}
-                      Reject
-                    </button>
-                    {activity.type === 'quest_proof' && activity.proof_url && activity.quest_id && (
+                    {activity.status === 'pending' && (
+                      <>
+                        <button
+                          onClick={() => updateProofStatus(activity.id, 'approved')}
+                          disabled={updating[activity.id]}
+                          className="inline-flex items-center gap-2 px-3 py-1.5 bg-green-600 hover:bg-green-700 disabled:opacity-50 text-white text-sm font-medium rounded-lg transition-colors"
+                        >
+                          {updating[activity.id] ? (
+                            <div className="animate-spin rounded-full h-4 w-4 border-2 border-white/20 border-t-white"></div>
+                          ) : (
+                            <CheckCircle className="h-4 w-4" />
+                          )}
+                          Approve
+                        </button>
+                        <button
+                          onClick={() => updateProofStatus(activity.id, 'rejected')}
+                          disabled={updating[activity.id]}
+                          className="inline-flex items-center gap-2 px-3 py-1.5 bg-red-600 hover:bg-red-700 disabled:opacity-50 text-white text-sm font-medium rounded-lg transition-colors"
+                        >
+                          {updating[activity.id] ? (
+                            <div className="animate-spin rounded-full h-4 w-4 border-2 border-white/20 border-t-white"></div>
+                          ) : (
+                            <XCircle className="h-4 w-4" />
+                          )}
+                          Reject
+                        </button>
+                      </>
+                    )}
+                    {activity.type === 'quest_proof' && activity.proof_url && activity.quest_id && (activity.status === 'pending' || activity.status === 'approved') && (
                       <button
                         onClick={() => setQuestProof(activity.quest_id!, activity.proof_url!, activity.id)}
                         disabled={updating[activity.id]}
